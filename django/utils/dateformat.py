@@ -22,7 +22,7 @@ from django.utils.translation import ugettext as _
 from django.utils.encoding import force_unicode
 from django.utils.timezone import is_aware, is_naive
 
-re_formatchars = re.compile(r'(?<!\\)([aAbBcdDEfFgGhHiIjlLmMnNOPrsStTUuwWyYzZ])')
+re_formatchars = re.compile(r'(?<!\\)([aAbBcdDEfFgGhHiIjlLmMnNOPprsStTUuwWyYzZ])')
 re_escaped = re.compile(r'\\(.)')
 
 class Formatter(object):
@@ -193,6 +193,13 @@ class DateFormat(TimeFormat):
         sign = '-' if seconds < 0 else '+'
         seconds = abs(seconds)
         return u"%s%02d%02d" % (sign, seconds // 3600, (seconds // 60) % 60)
+
+    def p(self):
+        "Difference to Greenwich time in hours with colon between hours and minutes; e.g. '+02:00', '-04:30'"
+        seconds = self.Z()
+        sign = '-' if seconds < 0 else '+'
+        seconds = abs(seconds)
+        return u"%s%02d:%02d" % (sign, seconds // 3600, (seconds // 60) % 60)
 
     def r(self):
         "RFC 2822 formatted date; e.g. 'Thu, 21 Dec 2000 16:01:07 +0200'"
